@@ -44,7 +44,7 @@
 			</div>
 	<div class="row">
 		<div class="col-xs-8">
-			<button class="btn btn-default" type="submit">Send</button>
+			<button class="btn btn-primary" type="submit">Send</button>
 		</div>
 	</div>
 </form>

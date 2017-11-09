@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <a href="/messages/create"><button class="btn btn-default mb-3">New Message</button></a>
+            <a href="/messages/create"><button class="btn btn-primary mb-3">New Message</button></a>
             <div class="panel panel-default">
                 <div class="panel-heading">Inbox</div>
 
@@ -15,8 +15,8 @@
                         </div>
                     @endif
 
-                    <table class="table">
-                    <tr>
+                    <table class="table editTable">
+                    <tr class="firstRow">
                         <th></th>
                         <th>Delete</th>
                         <th>From</th>
@@ -33,7 +33,7 @@
                     @endif
                         <td>
                             @if ($message->is_starred) 
-                                <strong>&#9734;</strong>
+                                <strong class="star">&#9734;</strong>
                             @endif
                         </td>
                         <td>
@@ -43,16 +43,16 @@
                                     <button class="btn btn-xs btn-default space-right" type="submit"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                             </form>
                         </td>
-                        <td><a href="/messages/{{ $message->id }}">{{ $message->sender->name }}</a></td>
+                        <td><a href="/messages/{{ $message->id }}">{{ $message->name }}</a></td>
                         <td><a href="/messages/{{ $message->id }}">{{ $message->subject }}</a></td>
-                        <td><a href="/messages/{{ $message->id }}">{{ $message->created_at->format('m/d/Y') }}</a></td>
+                        <td><a href="/messages/{{ $message->id }}">{{ Carbon\Carbon::parse($message->created_at)->format('m/d/Y') }}</a></td>
                     </tr>
                     @endforeach
                     </table>
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading">Sent</div>
+                <div class="panel-heading">Sent Mail</div>
 
                 <div class="panel-body">
                     @if (session('status'))
@@ -61,8 +61,8 @@
                         </div>
                     @endif
 
-                    <table class="table">
-                    <tr>
+                    <table class="table editTable">
+                    <tr class="firstRow">
                         <th></th>
                         <th>Delete</th>
                         <th>To</th>
@@ -73,7 +73,7 @@
                     <tr>
                          <td>
                             @if ($messageSent->is_starred) 
-                                <strong>&#9734;</strong>
+                                <strong class="star">&#9734;</strong>
                             @endif
                         </td>
                         <td>
