@@ -70,10 +70,9 @@
                         <th>Date</th>
                     </tr>
                     @foreach ($messagesSent as $messageSent)
-                    
                     <tr>
                          <td>
-                            @if ($message->is_starred) 
+                            @if ($messageSent->is_starred) 
                                 <strong>&#9734;</strong>
                             @endif
                         </td>
@@ -84,9 +83,16 @@
                                     <button class="btn btn-xs btn-default space-right" type="submit"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                             </form>
                         </td>
-                        <td><a href="/messages/{{ $messageSent->id }}">{{ $messageSent->recipient_id }}</a></td>
+                        <td><a href="/messages/{{ $messageSent->id }}">
+                            @foreach ($recipients as $recipient)
+                                @if($recipient->message_id === $messageSent->id)
+                                    {{ $recipient->name . ","}}
+                                @endif
+                            @endforeach
+
+                        </a></td>
                         <td><a href="/messages/{{ $messageSent->id }}">{{ $messageSent->subject }}</a></td>
-                        <td><a href="/messages/{{ $messageSent->id }}">{{ $messageSent->created_at->format('m/d/Y') }}</a></td>
+                        <td><a href="/messages/{{ $messageSent->id }}">{{ $messageSent->date }}</a></td>
                     </tr>
                     @endforeach
                     </table>

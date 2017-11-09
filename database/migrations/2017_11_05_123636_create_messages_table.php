@@ -17,7 +17,7 @@ class CreateMessagesTable extends Migration
             $table->increments('id');
             $table->integer('sender_id')->unsigned();
             $table->foreign('sender_id')->references('id')->on('users');
-            $table->integer('recipient_id')->unsigned();
+            $table->integer('recipient_id')->unsigned()->nullable();
             $table->foreign('recipient_id')->references('id')->on('users');
             $table->string('subject');
             $table->text('body');

@@ -18,8 +18,16 @@
 		    <div id="sent">{{ $message->created_at->format('m/d/Y') }}</div>
 		</div>
 		<div class="form-group row">
+		@if ($message->sender_id === \Auth::user()->id)
+			<label for="sender" class="mr-4">To: </label>
+		@else
 		  	<label for="sender" class="mr-4">From: </label>
-		    <div id="sender">{{ $message->sender_id }}</div>
+		@endif
+		@if ($message->sender_id === \Auth::user()->id)
+			<div id="sender">{{ $message->recipient_id }}</div>
+		@else
+			<div id="sender">{{ $message->sender_id }}</div>
+		@endif
 		</div>
 		<div class="form-group row">
 		  	<label for="subject" class="mr-4">Subject: </label>

@@ -12,7 +12,7 @@
 		  		<div id="recipient">{{ $recipients->name }}</div>
 		  		@endforeach
 		  	@else
-		    <select name="recipient" class="form-control" multiple>
+		    <select name="recipient[]" class="form-control" multiple>
 		      @foreach($users as $user)
 		        <option value="{{ $user->id }}">{{ $user->name }}</option>
 		      @endforeach

@@ -47,15 +47,27 @@ class MessageController extends Controller
     {
         //
         $message = new \App\Message;
+        // $recipients = request('recipient');
         
         $message->subject = request('subject');
         $message->body = request('body');
         $message->sender_id = \Auth::user()->id;
-        $message->recipient_id = request('recipient');
+        // $message->recipient_id = request('recipient');
         $message->is_read = false;
         $message->is_starred = false;
-
         $message->save();
+
+        
+
+        foreach ($_POST['recipient'] as $recipients)
+        {
+            // error_log($recipients);
+            $message_recipient = new \App\Message_Recipient;
+            $message_recipient->message_id = $message->id;
+            $message_recipient->recipient_id = $recipients;
+            $message_recipient->sender_id = \Auth::user()->id;
+            $message_recipient->save();
+        }
         
         return redirect('home');
     }
