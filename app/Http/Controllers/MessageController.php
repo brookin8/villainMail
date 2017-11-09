@@ -26,11 +26,9 @@ class MessageController extends Controller
         $users = \App\User::all();
         $recipient = '';
         $subject = '';
-        $recipientName = '';
         if($request->session()->get('recipient')) {
             $current_recipient = $request->session()->pull('recipient');
             $recipient = \App\User::where('id', $current_recipient)->get();
-            //$recipientName = $recipient->name;
         }
         if($request->session()->get('subject')) {
             $subject = 'RE: ' . $request->session()->pull('subject');
@@ -74,8 +72,13 @@ class MessageController extends Controller
         $message->is_read = true;
         $message->save();
 
-        $request->session()->put('recipient', $message->sender_id);
-        $request->session()->put('subject', $message->subject);
+        if($message->sender_id === \Auth::user()->id) {
+            $request->session()->put('recipient', $message->recipient_id);
+            $request->session()->put('subject', $message->subject);
+        } else {
+            $request->session()->put('recipient', $message->sender_id);
+            $request->session()->put('subject', $message->subject);
+        } 
 
         return view('messages.show',compact('message'));
     }
@@ -119,6 +122,8 @@ class MessageController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $message = \App\Message::find($id);
+        $message->delete();
+        return redirect('home');
     }
 }

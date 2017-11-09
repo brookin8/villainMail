@@ -23,7 +23,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $messages = \App\Message::all();
-        return view('home', compact('messages'));
+        $currentUser = \Auth::user()->id;
+        $messages = \App\Message::where('recipient_id',1)->orderBy('id','desc')->get();
+        $messagesSent = \App\Message::where('sender_id',$currentUser)->orderBy('id','desc')->get();
+
+        return view('home', compact('messages','messagesSent'));
     }
 }
