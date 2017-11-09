@@ -4,6 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
+            <a href="/messages/create"><button class="btn btn-default mb-3">New Message</button></a>
             <div class="panel panel-default">
                 <div class="panel-heading">Dashboard</div>
 
@@ -22,15 +23,21 @@
                         <th>Date</th>
                     </tr>
                     @foreach ($messages as $message)
+                    
+                    
+                    @if ($message->is_read)
                     <tr>
+                    @else
+                    <tr style="font-weight:bold">
+                    @endif
                         <td>
                             @if ($message->is_starred) 
                                 <strong>&#9734;</strong>
                             @endif
                         </td>
-                        <td>{{ $message->sender->name }}</td>
-                        <td>{{ $message->subject }}</td>
-                        <td>{{ $message->created_at }}</td>
+                        <td><a href="/messages/{{ $message->id }}">{{ $message->sender->name }}</a></td>
+                        <td><a href="/messages/{{ $message->id }}">{{ $message->subject }}</a></td>
+                        <td><a href="/messages/{{ $message->id }}">{{ $message->created_at->format('m/d/Y') }}</a></td>
                     </tr>
                     @endforeach
 
