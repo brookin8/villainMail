@@ -21,7 +21,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $currentUser = \Auth::user()->id;
         $messages = \App\Message::where('recipient_id',$currentUser)->orderBy('id','desc')->get();
@@ -33,6 +33,9 @@ class HomeController extends Controller
             // ->orderBy('id','desc')
             ->where('message_recipient.sender_id',$currentUser)
             ->get();
+
+        $request->session()->put('recipient', '');
+        $request->session()->put('subject', '');
 
         return view('home', compact('messages','messagesSent','recipients'));
     }

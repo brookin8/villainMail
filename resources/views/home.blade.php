@@ -92,7 +92,7 @@
 
                         </a></td>
                         <td><a href="/messages/{{ $messageSent->id }}">{{ $messageSent->subject }}</a></td>
-                        <td><a href="/messages/{{ $messageSent->id }}">{{ $messageSent->date }}</a></td>
+                        <td><a href="/messages/{{ $messageSent->id }}">{{ $messageSent->created_at->format('m/d/Y') }}</a></td>
                     </tr>
                     @endforeach
                     </table>

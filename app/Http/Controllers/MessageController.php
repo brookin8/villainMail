@@ -26,14 +26,20 @@ class MessageController extends Controller
         $users = \App\User::all();
         $recipient = '';
         $subject = '';
+        $recipient_ids=[];
+        
         if($request->session()->get('recipient')) {
             $current_recipient = $request->session()->pull('recipient');
-            $recipient = \App\User::where('id', $current_recipient)->get();
-        }
+            $recipient = \App\User::whereIn('id', $current_recipient)->get();
+            foreach($recipient as $recipients) {
+                array_push($recipient_ids,$recipients->id);
+            }
+        } 
+
         if($request->session()->get('subject')) {
             $subject = 'RE: ' . $request->session()->pull('subject');
         }
-        return view('messages.create',compact('users','recipient','subject'));
+        return view('messages.create',compact('users','recipient','subject','recipient_ids'));
 
     }
 
@@ -85,14 +91,28 @@ class MessageController extends Controller
         $message->save();
 
         if($message->sender_id === \Auth::user()->id) {
-            $request->session()->put('recipient', $message->recipient_id);
+        
+            $recipients = \DB::table('message_recipient')
+                ->join('users', 'message_recipient.recipient_id', '=', 'users.id')
+                ->select('message_recipient.*', 'users.name as name')
+                ->where('message_recipient.message_id',$message->id)
+                ->get();
+
+            $finalRecipients = [];
+
+            foreach($recipients as $recipient) {
+                array_push($finalRecipients, $recipient->recipient_id);
+            }
+
+            $request->session()->put('recipient', $finalRecipients);
             $request->session()->put('subject', $message->subject);
+
         } else {
             $request->session()->put('recipient', $message->sender_id);
             $request->session()->put('subject', $message->subject);
         } 
 
-        return view('messages.show',compact('message'));
+        return view('messages.show',compact('message','recipients'));
     }
 
     /**

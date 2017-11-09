@@ -24,7 +24,9 @@
 		  	<label for="sender" class="mr-4">From: </label>
 		@endif
 		@if ($message->sender_id === \Auth::user()->id)
-			<div id="sender">{{ $message->recipient_id }}</div>
+			@foreach ($recipients as $recipient)
+			<div id="sender" class="mr-1">{{ $recipient->name }},</div>
+			@endforeach
 		@else
 			<div id="sender">{{ $message->sender_id }}</div>
 		@endif
