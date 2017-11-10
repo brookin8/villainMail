@@ -31,9 +31,13 @@ class MessageController extends Controller
         if($request->session()->get('recipient')) {
             $current_recipient = $request->session()->pull('recipient');
             $recipient = \App\User::whereIn('id', $current_recipient)->get();
-            foreach($recipient as $recipients) {
-                array_push($recipient_ids,$recipients->id);
-            }
+
+            //error_log($recipient);
+
+                foreach($recipient as $recipients) {
+                    array_push($recipient_ids,$recipients->id);
+                }
+    
         } 
 
         if($request->session()->get('subject')) {
@@ -89,6 +93,7 @@ class MessageController extends Controller
         $message = \App\Message::find($id);
         $message->is_read = true;
         $message->save();
+        $sender = \App\User::where('id',$message->sender_id)->get();
 
         if($message->sender_id === \Auth::user()->id) {
         
@@ -108,11 +113,24 @@ class MessageController extends Controller
             $request->session()->put('subject', $message->subject);
 
         } else {
-            $request->session()->put('recipient', $message->sender_id);
+
+            $recipients = \DB::table('message_recipient')
+                ->join('users', 'message_recipient.sender_id', '=', 'users.id')
+                ->select('message_recipient.*', 'users.name as name')
+                ->where('message_recipient.message_id',$message->id)
+                ->get();
+
+            $finalRecipients = [];
+
+            foreach($recipients as $recipient) {
+                array_push($finalRecipients, $recipient->sender_id);
+            }
+
+            $request->session()->put('recipient', $finalRecipients);
             $request->session()->put('subject', $message->subject);
         } 
 
-        return view('messages.show',compact('message','recipients'));
+        return view('messages.show',compact('message','recipients','sender'));
     }
 
     /**

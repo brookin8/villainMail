@@ -37,7 +37,9 @@
 					<div id="sender" class="mr-1">{{ $recipient->name }},</div>
 					@endforeach
 				@else
-					<div id="sender">{{ $message->sender_id }}</div>
+					@foreach ($sender as $senders)
+					<div id="sender">{{ $senders->name }}</div>
+					@endforeach
 				@endif
 				</div>
 			</div>
